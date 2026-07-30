@@ -1,0 +1,7 @@
+﻿Código;Código de Barras;Produto;Categoria;Fornecedor;Preço de Compra (R$);Preço de Venda (R$);Quantidade;Estoque Mínimo;Data de Cadastro;Última Alteração;Valor em estoque (R$)
+P0001;;Aveia;Alimentos;;0.00;8.50;10;0;;;85.00
+P0002;;Cebola;Hortifruti;;0.00;4.20;15;0;;;63.00
+P0003;;Sabão em pó;Limpeza;;0.00;22.90;3;0;;;68.70
+P0004;;maria sabor do sertao;Cuzcuz;;0.00;20.00;5;0;;;100.00
+P0005;;dona benta;Cuzcuz;;0.00;15.00;1;0;;;15.00
+P0006;12312312313;pera;Frutas;bahia;5.00;20.00;25;2;30/07/2026 09:02;30/07/2026 09:10;500.00
