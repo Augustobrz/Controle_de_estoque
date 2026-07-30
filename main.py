@@ -5,7 +5,7 @@ from __future__ import annotations
 import csv
 import json
 import sqlite3
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from tkinter import messagebox, ttk
 import customtkinter as ctk
@@ -16,10 +16,19 @@ BANCO_DADOS = Path(__file__).with_name("estoque.db")
 ARQUIVO_RELATORIO = Path(__file__).with_name("relatorio_estoque.csv")
 PASTA_RELATORIOS = Path(__file__).with_name("relatorios_por_categoria")
 ARQUIVO_CATEGORIAS = Path(__file__).with_name("categorias.txt")
+VALIDADE_POR_CATEGORIA: dict[str, int] = {
+    "Hortifruti": 7, "Frutas": 10, "Verduras": 7, "Legumes": 10,
+    "Carnes": 5, "Carnes e Aves": 5, "Peixes e Frutos do Mar": 3,
+    "Laticínios": 15, "Alimentos Refrigerados": 20, "Frios e Embutidos": 10,
+    "Padaria": 3, "Confeitaria": 30, "Bebidas": 180, "Alimentos": 90,
+    "Limpeza": 730, "Higiene": 730, "Utilidades Domésticas": 1095,
+}
+VALIDADE_PADRAO_DIAS = 365
+
 DADOS_INICIAIS = [
-    {"codigo": "P0001", "codigo_barras": "", "produto": "Aveia", "categoria": "Alimentos", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 8.50, "quantidade": 10, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": ""},
-    {"codigo": "P0002", "codigo_barras": "", "produto": "Cebola", "categoria": "Hortifruti", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 4.20, "quantidade": 15, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": ""},
-    {"codigo": "P0003", "codigo_barras": "", "produto": "Sabão em pó", "categoria": "Limpeza", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 22.90, "quantidade": 3, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": ""},
+    {"codigo": "P0001", "codigo_barras": "", "produto": "Aveia", "categoria": "Alimentos", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 8.50, "quantidade": 10, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": "", "data_validade": ""},
+    {"codigo": "P0002", "codigo_barras": "", "produto": "Cebola", "categoria": "Hortifruti", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 4.20, "quantidade": 15, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": "", "data_validade": ""},
+    {"codigo": "P0003", "codigo_barras": "", "produto": "Sabão em pó", "categoria": "Limpeza", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 22.90, "quantidade": 3, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": "", "data_validade": ""},
 ]
 
 
@@ -29,13 +38,15 @@ class ControleEstoque(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
         self.produtos = self.carregar_estoque()
+        self.aplicar_validades_automaticas()
         self.categorias = self.carregar_categorias()
         self.indice_em_edicao: int | None = None
         self.coluna_ordenacao = "produto"
         self.ordem_reversa = False
+        self.filtro_dashboard: str | None = None
 
         self.title("Controle de Estoque | Mercado")
-        self.geometry("1000x630")
+        self.geometry("1000x720")
         self.minsize(850, 520)
         self.configure(fg_color="#f3f6f8")
         self.protocol("WM_DELETE_WINDOW", self.sair)
@@ -50,23 +61,23 @@ class ControleEstoque(ctk.CTk):
                     id INTEGER PRIMARY KEY AUTOINCREMENT, codigo TEXT NOT NULL DEFAULT '', codigo_barras TEXT NOT NULL DEFAULT '',
                     produto TEXT NOT NULL, categoria TEXT NOT NULL, fornecedor TEXT NOT NULL DEFAULT '', unidade TEXT NOT NULL DEFAULT 'UN', preco REAL NOT NULL DEFAULT 0,
                     preco_compra REAL NOT NULL DEFAULT 0, preco_venda REAL NOT NULL DEFAULT 0, quantidade INTEGER NOT NULL,
-                    estoque_minimo INTEGER NOT NULL DEFAULT 0, data_cadastro TEXT NOT NULL DEFAULT '', ultima_alteracao TEXT NOT NULL DEFAULT '')""")
+                    estoque_minimo INTEGER NOT NULL DEFAULT 0, data_cadastro TEXT NOT NULL DEFAULT '', ultima_alteracao TEXT NOT NULL DEFAULT '', data_validade TEXT NOT NULL DEFAULT '')""")
                 conexao.execute("""CREATE TABLE IF NOT EXISTS movimentos (
                     id INTEGER PRIMARY KEY AUTOINCREMENT, tipo TEXT NOT NULL, codigo TEXT NOT NULL,
                     produto TEXT NOT NULL, quantidade REAL NOT NULL, valor REAL NOT NULL DEFAULT 0,
                     data_movimento TEXT NOT NULL, observacao TEXT NOT NULL DEFAULT '')""")
                 self.atualizar_estrutura_banco(conexao)
                 registros = conexao.execute(
-                    "SELECT codigo, codigo_barras, produto, categoria, fornecedor, unidade, preco_compra, preco_venda, quantidade, estoque_minimo, data_cadastro, ultima_alteracao FROM produtos ORDER BY id"
+                    "SELECT codigo, codigo_barras, produto, categoria, fornecedor, unidade, preco_compra, preco_venda, quantidade, estoque_minimo, data_cadastro, ultima_alteracao, data_validade FROM produtos ORDER BY id"
                 ).fetchall()
                 if registros:
                     return [
-                        dict(zip(("codigo", "codigo_barras", "produto", "categoria", "fornecedor", "unidade", "preco_compra", "preco_venda", "quantidade", "estoque_minimo", "data_cadastro", "ultima_alteracao"), registro))
+                        dict(zip(("codigo", "codigo_barras", "produto", "categoria", "fornecedor", "unidade", "preco_compra", "preco_venda", "quantidade", "estoque_minimo", "data_cadastro", "ultima_alteracao", "data_validade"), registro))
                         for registro in registros
                     ]
                 dados = self.carregar_json_legado()
                 conexao.executemany(
-                    "INSERT INTO produtos (codigo, codigo_barras, produto, categoria, fornecedor, unidade, preco, preco_compra, preco_venda, quantidade, estoque_minimo, data_cadastro, ultima_alteracao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO produtos (codigo, codigo_barras, produto, categoria, fornecedor, unidade, preco, preco_compra, preco_venda, quantidade, estoque_minimo, data_cadastro, ultima_alteracao, data_validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [self.valores_banco(item, posicao) for posicao, item in enumerate(dados, 1)],
                 )
                 return dados
@@ -85,6 +96,7 @@ class ControleEstoque(ctk.CTk):
             "fornecedor": "TEXT NOT NULL DEFAULT ''", "unidade": "TEXT NOT NULL DEFAULT 'UN'", "preco_compra": "REAL NOT NULL DEFAULT 0",
             "preco_venda": "REAL NOT NULL DEFAULT 0", "estoque_minimo": "INTEGER NOT NULL DEFAULT 0",
             "data_cadastro": "TEXT NOT NULL DEFAULT ''", "ultima_alteracao": "TEXT NOT NULL DEFAULT ''",
+            "data_validade": "TEXT NOT NULL DEFAULT ''",
         }
         for campo, definicao in novos_campos.items():
             if campo not in colunas:
@@ -94,7 +106,7 @@ class ControleEstoque(ctk.CTk):
 
     @staticmethod
     def valores_banco(item: dict, posicao: int) -> tuple:
-        return (item.get("codigo") or f"P{posicao:04d}", item.get("codigo_barras", ""), item["produto"], item["categoria"], item.get("fornecedor", ""), item.get("unidade", "UN").upper(), item.get("preco_venda", item.get("preco", 0)), item.get("preco_compra", 0), item.get("preco_venda", item.get("preco", 0)), item["quantidade"], item.get("estoque_minimo", 0), item.get("data_cadastro", ""), item.get("ultima_alteracao", ""))
+        return (item.get("codigo") or f"P{posicao:04d}", item.get("codigo_barras", ""), item["produto"], item["categoria"], item.get("fornecedor", ""), item.get("unidade", "UN").upper(), item.get("preco_venda", item.get("preco", 0)), item.get("preco_compra", 0), item.get("preco_venda", item.get("preco", 0)), item["quantidade"], item.get("estoque_minimo", 0), item.get("data_cadastro", ""), item.get("ultima_alteracao", ""), item.get("data_validade", ""))
 
     @staticmethod
     def registrar_movimento(item: dict, tipo: str, quantidade: float, valor: float = 0, observacao: str = "") -> None:
@@ -128,6 +140,66 @@ class ControleEstoque(ctk.CTk):
         except OSError:
             return ["Alimentos", "Hortifruti", "Limpeza"]
 
+    @staticmethod
+    def parse_data(texto: str) -> date | None:
+        """Converte dd/mm/YYYY ou dd/mm/YYYY HH:MM em date."""
+        if not texto or not texto.strip():
+            return None
+        for formato in ("%d/%m/%Y", "%d/%m/%Y %H:%M"):
+            try:
+                return datetime.strptime(texto.strip(), formato).date()
+            except ValueError:
+                continue
+        return None
+
+    @staticmethod
+    def formatar_data(data: date) -> str:
+        return data.strftime("%d/%m/%Y")
+
+    def dias_validade_categoria(self, categoria: str) -> int:
+        """Retorna dias de validade estimados conforme a categoria."""
+        categoria_normalizada = categoria.strip().casefold()
+        for nome, dias in VALIDADE_POR_CATEGORIA.items():
+            if nome.casefold() in categoria_normalizada or categoria_normalizada in nome.casefold():
+                return dias
+        return VALIDADE_PADRAO_DIAS
+
+    def calcular_validade_automatica(self, item: dict) -> str:
+        """Calcula data de validade com base na categoria e data de cadastro."""
+        base = self.parse_data(item.get("data_cadastro", "")) or date.today()
+        dias = self.dias_validade_categoria(item.get("categoria", ""))
+        return self.formatar_data(base + timedelta(days=dias))
+
+    def aplicar_validades_automaticas(self) -> None:
+        """Preenche validade ausente e persiste alterações no banco."""
+        alterado = False
+        for item in self.produtos:
+            if not item.get("data_validade", "").strip():
+                item["data_validade"] = self.calcular_validade_automatica(item)
+                alterado = True
+        if alterado:
+            self.salvar_estoque(exibir_mensagem=False)
+
+    def produto_vencido(self, item: dict) -> bool:
+        validade = self.parse_data(item.get("data_validade", ""))
+        return validade is not None and validade < date.today()
+
+    def produto_estoque_baixo(self, item: dict) -> bool:
+        minimo = float(item.get("estoque_minimo", 0))
+        return minimo > 0 and float(item["quantidade"]) <= minimo
+
+    def calcular_metricas(self) -> dict:
+        """Calcula indicadores exibidos no dashboard."""
+        valor_estoque = sum(float(p["quantidade"]) * float(p["preco_venda"]) for p in self.produtos)
+        estoque_baixo = [p for p in self.produtos if self.produto_estoque_baixo(p)]
+        vencidos = [p for p in self.produtos if self.produto_vencido(p)]
+        return {
+            "total_produtos": len(self.produtos),
+            "valor_estoque": valor_estoque,
+            "estoque_baixo": estoque_baixo,
+            "vencidos": vencidos,
+        }
+
     def criar_interface(self) -> None:
         cabecalho = ctk.CTkFrame(self, fg_color="#155e75", corner_radius=0, height=82)
         cabecalho.pack(fill="x")
@@ -141,6 +213,8 @@ class ControleEstoque(ctk.CTk):
 
         conteudo = ctk.CTkFrame(self, fg_color="transparent")
         conteudo.pack(fill="both", expand=True, padx=28, pady=22)
+
+        self.criar_dashboard(conteudo)
 
         leitor_frame = ctk.CTkFrame(conteudo, fg_color="#e5f3f5", corner_radius=8)
         leitor_frame.pack(fill="x", pady=(0, 12))
@@ -205,6 +279,55 @@ class ControleEstoque(ctk.CTk):
         self.criar_botao(botoes, "Relatório", self.gerar_relatorio, "#7c3aed").pack(side="left", padx=4)
         self.criar_botao(botoes, "Sair", self.sair, "#374151").pack(side="left", padx=4)
 
+    def criar_dashboard(self, pai) -> None:
+        """Faixa de indicadores rápidos do estoque."""
+        dashboard = ctk.CTkFrame(pai, fg_color="transparent")
+        dashboard.pack(fill="x", pady=(0, 16))
+        dashboard.columnconfigure((0, 1, 2, 3), weight=1, uniform="dash")
+
+        ctk.CTkLabel(
+            dashboard, text="Dashboard", font=("Segoe UI", 15, "bold"), text_color="#155e75", anchor="w"
+        ).grid(row=0, column=0, columnspan=4, sticky="w", pady=(0, 8))
+
+        self.cards_dashboard: dict[str, dict] = {}
+        configuracao = (
+            ("total", "Produtos", "#155e75", None),
+            ("valor", "Valor em estoque", "#0f766e", None),
+            ("baixo", "Produtos acabando", "#d97706", "baixo"),
+            ("vencido", "Produtos vencidos", "#dc2626", "vencido"),
+        )
+        for coluna, (chave, titulo, cor, filtro) in enumerate(configuracao):
+            card = ctk.CTkFrame(dashboard, fg_color="white", corner_radius=10, border_width=1, border_color="#e5e7eb")
+            card.grid(row=1, column=coluna, sticky="nsew", padx=(0 if coluna == 0 else 6, 0))
+            ctk.CTkLabel(card, text=titulo, font=("Segoe UI", 12), text_color="#6b7280").pack(anchor="w", padx=14, pady=(12, 2))
+            valor_label = ctk.CTkLabel(card, text="—", font=("Segoe UI", 26, "bold"), text_color=cor)
+            valor_label.pack(anchor="w", padx=14, pady=(0, 4))
+            ctk.CTkLabel(card, text="↓", font=("Segoe UI", 14), text_color="#9ca3af").pack(anchor="w", padx=14, pady=(0, 10))
+            self.cards_dashboard[chave] = {"valor": valor_label, "cor": cor, "filtro": filtro}
+            if filtro:
+                card.bind("<Button-1>", lambda _e, f=filtro: self.filtrar_por_dashboard(f))
+                for widget in card.winfo_children():
+                    widget.bind("<Button-1>", lambda _e, f=filtro: self.filtrar_por_dashboard(f))
+
+    def filtrar_por_dashboard(self, filtro: str) -> None:
+        """Alterna filtro da tabela ao clicar em um card de alerta."""
+        self.filtro_dashboard = None if self.filtro_dashboard == filtro else filtro
+        self.pesquisa.delete(0, "end")
+        self.atualizar_tabela()
+
+    def atualizar_dashboard(self) -> None:
+        """Atualiza os números exibidos nos cards."""
+        metricas = self.calcular_metricas()
+        self.cards_dashboard["total"]["valor"].configure(text=str(metricas["total_produtos"]))
+        self.cards_dashboard["valor"]["valor"].configure(text=self.formatar_preco(metricas["valor_estoque"]))
+        self.cards_dashboard["baixo"]["valor"].configure(text=str(len(metricas["estoque_baixo"])))
+        self.cards_dashboard["vencido"]["valor"].configure(text=str(len(metricas["vencidos"])))
+        for chave in ("baixo", "vencido"):
+            filtro = self.cards_dashboard[chave]["filtro"]
+            cor_ativa = self.cards_dashboard[chave]["cor"]
+            cor = cor_ativa if self.filtro_dashboard == filtro else "#6b7280" if chave == "baixo" else "#dc2626"
+            self.cards_dashboard[chave]["valor"].configure(text_color=cor if self.filtro_dashboard == filtro else self.cards_dashboard[chave]["cor"])
+
     @staticmethod
     def criar_botao(pai, texto: str, comando, cor: str) -> ctk.CTkButton:
         return ctk.CTkButton(pai, text=texto, command=comando, width=95, height=36, fg_color=cor, hover_color=cor, font=("Segoe UI", 12, "bold"))
@@ -218,6 +341,10 @@ class ControleEstoque(ctk.CTk):
         termo = self.pesquisa.get().strip().lower()
         itens_filtrados = []
         for indice, item in enumerate(self.produtos):
+            if self.filtro_dashboard == "baixo" and not self.produto_estoque_baixo(item):
+                continue
+            if self.filtro_dashboard == "vencido" and not self.produto_vencido(item):
+                continue
             valores = f"{item['codigo']} {item['codigo_barras']} {item['produto']} {item['categoria']} {item['fornecedor']} {item['preco_venda']}".lower()
             if termo in valores:
                 itens_filtrados.append((indice, item))
@@ -226,7 +353,9 @@ class ControleEstoque(ctk.CTk):
         for indice, item in itens_filtrados:
             self.tabela.insert("", "end", iid=str(indice), values=(item["codigo"], item["produto"], item["categoria"], item["quantidade"], self.formatar_preco(float(item["preco_venda"]))))
         total_itens = sum(int(item["quantidade"]) for item in self.produtos)
-        self.status.configure(text=f"{len(itens_filtrados)} produto(s) exibido(s)  •  {total_itens} item(ns) em estoque")
+        filtro_texto = {"baixo": " • filtro: estoque baixo", "vencido": " • filtro: vencidos"}.get(self.filtro_dashboard or "", "")
+        self.status.configure(text=f"{len(itens_filtrados)} produto(s) exibido(s)  •  {total_itens} item(ns) em estoque{filtro_texto}")
+        self.atualizar_dashboard()
 
     def ordenar_por(self, coluna: str) -> None:
         """Ordena a tabela alternando entre ordem crescente e decrescente."""
@@ -323,7 +452,7 @@ class ControleEstoque(ctk.CTk):
     def abrir_formulario(self, titulo: str, item: dict | None = None, codigo_barras: str = "") -> None:
         janela = ctk.CTkToplevel(self)
         janela.title(titulo)
-        janela.geometry("500x760")
+        janela.geometry("500x800")
         janela.resizable(False, False)
         janela.transient(self)
         janela.grab_set()
@@ -388,7 +517,8 @@ class ControleEstoque(ctk.CTk):
             ("codigo", "Código"), ("codigo_barras", "Código de Barras"), ("produto", "Produto"),
             ("categoria", "Categoria"), ("fornecedor", "Fornecedor"), ("unidade", "Unidade (UN/KG)"), ("preco_compra", "Preço de Compra (R$)"),
             ("preco_venda", "Preço de Venda (R$)"), ("quantidade", "Quantidade"),
-            ("estoque_minimo", "Estoque Mínimo"), ("data_cadastro", "Data de Cadastro"),
+            ("estoque_minimo", "Estoque Mínimo"), ("data_validade", "Data de Validade (dd/mm/aaaa)"),
+            ("data_cadastro", "Data de Cadastro"),
             ("ultima_alteracao", "Última Alteração"),
         )
         agora = datetime.now().strftime("%d/%m/%Y %H:%M")
@@ -414,6 +544,8 @@ class ControleEstoque(ctk.CTk):
                 entrada.insert(0, codigo_barras)
             elif chave == "unidade":
                 entrada.set("UN")
+            elif chave == "data_validade" and not item:
+                entrada.insert(0, "Automática pela categoria")
             elif chave in {"data_cadastro", "ultima_alteracao"}:
                 entrada.insert(0, agora)
             if chave in {"data_cadastro", "ultima_alteracao"}:
@@ -443,6 +575,12 @@ class ControleEstoque(ctk.CTk):
                     raise ValueError
                 if quantidade < 0 or estoque_minimo < 0 or preco_compra < 0 or preco_venda < 0:
                     raise ValueError
+                data_validade = campos["data_validade"].get().strip()
+                if data_validade.lower().startswith("automática"):
+                    data_validade = ""
+                elif data_validade and not self.parse_data(data_validade):
+                    messagebox.showerror("Data inválida", "Informe a validade no formato dd/mm/aaaa.", parent=janela)
+                    return
             except ValueError:
                 messagebox.showerror("Dados inválidos", "Preencha todos os campos. Quantidade e preço devem ser números não negativos.", parent=janela)
                 return
@@ -451,6 +589,7 @@ class ControleEstoque(ctk.CTk):
                 "fornecedor": fornecedor, "unidade": unidade, "preco_compra": preco_compra, "preco_venda": preco_venda,
                 "quantidade": quantidade, "estoque_minimo": estoque_minimo,
                 "data_cadastro": item["data_cadastro"] if item else agora, "ultima_alteracao": agora,
+                "data_validade": data_validade or self.calcular_validade_automatica({"categoria": categoria, "data_cadastro": item["data_cadastro"] if item else agora}),
             }
             quantidade_anterior = float(item["quantidade"]) if item else 0
             if self.indice_em_edicao is None:
@@ -484,7 +623,7 @@ class ControleEstoque(ctk.CTk):
             with sqlite3.connect(BANCO_DADOS) as conexao:
                 conexao.execute("DELETE FROM produtos")
                 conexao.executemany(
-                    "INSERT INTO produtos (codigo, codigo_barras, produto, categoria, fornecedor, unidade, preco, preco_compra, preco_venda, quantidade, estoque_minimo, data_cadastro, ultima_alteracao) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO produtos (codigo, codigo_barras, produto, categoria, fornecedor, unidade, preco, preco_compra, preco_venda, quantidade, estoque_minimo, data_cadastro, ultima_alteracao, data_validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                     [self.valores_banco(item, posicao) for posicao, item in enumerate(self.produtos, 1)],
                 )
             if exibir_mensagem:
