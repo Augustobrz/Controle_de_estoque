@@ -1,0 +1,20 @@
+[
+  {
+    "produto": "Aveia",
+    "quantidade": 10,
+    "categoria": "Alimentos",
+    "preco": 8.5
+  },
+  {
+    "produto": "Cebola",
+    "quantidade": 15,
+    "categoria": "Hortifruti",
+    "preco": 4.2
+  },
+  {
+    "produto": "Sabão em pó",
+    "quantidade": 3,
+    "categoria": "Limpeza",
+    "preco": 22.9
+  }
+]

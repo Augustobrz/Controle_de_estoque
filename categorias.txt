@@ -1,0 +1,596 @@
+Alimentos
+Açougue
+Carnes
+Carne - Plant Based
+Carne - Temperos
+Carne Bovina
+Carne Aves
+Carne Suína
+Carnes Exóticas e Especiais
+Alimentos Congelados
+Pratos Congelados
+Lanches Congelados
+Carnes, Aves e Peixes
+Massas Congeladas
+Sopas Congeladas
+Tortas Congeladas
+Legumes e Vegetais Congelados
+Pratos Prontos Congelados
+Sobremesas Congeladas
+Açaí
+Sobremesas Diversas
+Sorvetes
+Sazonal Industrializado
+Sazonal Industrializado - Suínos
+Sazonal Industrializado - Aves
+Alimentos Refrigerados
+Frios e Embutidos
+Cortes Especiais
+Linguiças
+Mortadela
+Presunto
+Salames
+Salsichas
+Salgados e Defumados
+Frutas, Legumes e Verduras
+Legumes Refrigerados
+Verduras Refrigeradas
+Frutas Refrigeradas
+Caldos e Temperos
+Iogurtes
+Iogurte Funcional
+Iogurte Liquido
+Iogurte Natural
+Iogurte Polpa
+Iogurte para Sobremesa
+Leite Fermentado
+Iogurte Petit Suisse
+Iogurte Grego
+Iogurtes Diferenciados
+Laticínios
+Chantilly
+Creme de Leite Refrigerado
+Fondue
+Leites Frescos
+Margarinas, Manteigas e Gorduras
+Massas Refrigeradas
+Nata
+Pratos Prontos Refrigerados
+Queijo Cremoso
+Queijos
+Patês e Antepastos
+Ovos Refrigerados
+Ovos Líquido
+Básico da Despensa
+Achocolatados
+Achocolatado Diet ou Light
+Achocolatado Saborizado
+Achocolatado Em Pó
+Achocolatado Maltado
+Achocolatado à Base de Soja
+Achocolatado Líquido
+Açúcar
+Açúcar Cristal
+Açúcar Orgânico
+Açúcar para Confeitaria
+Açúcar em Cubo
+Açúcar Demerara
+Açúcar Mascavo
+Açúcar em Sachê
+Açúcar Refinado
+Cafés
+Café em Cápsula
+Café em Grão
+Café Solúvel
+Café Torrado e Moído
+Cestas
+Cesta Básica
+Cesta de Natal
+Farináceos
+Farinha
+Mistura
+Fubá
+Farinha De Rosca
+Trigo
+Cuzcuz
+Purê de Batata
+Farofa Pronta
+Grãos e Cereais
+Polvilho
+Sagu
+Tapióca
+Amendoim
+Arroz
+Canjica
+Canjiquinha
+Evilha
+Feijão
+Grão de Bico
+Grãos Secos
+Lentilha
+Pipoca
+Soja
+Leite em Pó
+Leite em Pó de Soja
+Leite em Pó Desnatado
+Leite em Pó Integral
+Leite em Pó Modificado
+Leite em Pó Sachês
+Leites
+Leite Desnatado
+Leite Integral
+Leite Semi-desnatado
+Leites Especiais
+Leite Zero Lactose
+Leite Vegetal
+Massas
+Massa Instantânea
+Massas Secas
+Massas Sem Glúten
+Óleos e Azeites
+Azeite
+Óleo Misto
+Óleos
+Óleo Composto
+Cereais
+Aveia
+Aveia em Floco
+Farinha de Aveia
+Aveia Saborizada
+Cereais Matinais
+Cereais Naturais
+Cereais Sabores
+Cereais Funcionais
+Granola e Mix de Cereais
+Complemento da Despensa
+Saudáveis
+Farináceos Saudáveis
+Snacks
+Grãos e Sementes
+Suplementos Alimentares
+Nutrição
+Alimentar Adulto
+Purê de Frutas
+Emagrecedor
+Alimentar e Energético
+Biscoitos
+Biscoitos Doces
+Biscoitos Salgados
+Sazonal de Mercearia
+Colombas
+Ovo de Páscoa
+Panetone e Chocotones
+Presenteáveis
+Adoçantes
+Adoçantes Líquido
+Adoçantes em Pó
+Adoçantes Culinário
+Xilitol
+Sucralose
+Eritritol
+Chá
+Chá Misto
+Chá Mate
+Chá Preto
+Doces e Sobremesas
+Confeitaria
+Leite Condensado
+Creme de Leite
+Amido de Milho
+Confeitos e Granulados
+Derivados de Coco
+Fermento
+Gelatina
+Mistura para Bolos
+Sobremesas
+Doces
+Bomboniere
+Chocolates
+Balas e Doces
+Bombons
+Acompanhamentos
+Geléias
+Doces em Calda
+Doces em Massas
+Doces em Pasta
+Mel e Derivados
+Hortifruti
+Frutas
+Frutas Secas
+Frutas Especiais
+Frutas Fracionadas
+Maçã
+Mamão
+Melão e Melância
+Pêras
+Frutas Tropicais
+Uvas
+Frutas Orgânicas
+Banana
+Frutas Cítricas
+Legumes e Verduras
+Hidropônicos
+Orgânicos
+Temperos
+Cogumelos
+Hortaliças
+Legumes
+Ovos
+Ovos Orgânicos
+Ovos Brancos
+Ovos Vermelhos
+Ovos Caipira
+Ovos Especiais
+Mercearia Salgada
+Molhos e Condimentos
+Especiarias
+Extrato de Tomate
+Atomatados
+Ketchup e Mostarda
+Maionese
+Molhos
+Sal
+Vinagres
+Alimentos em Conserva
+Vegetais em Conserva
+Outros Alimentos em Conserva
+Étnicos
+Árabe
+Kosher
+Mexicano
+Oriental
+Peixes em Conserva
+Atum
+Sardinha
+Outros Peixes em Conserva
+Pratos Prontos
+Prato Pronto - Feijão
+Prato Pronto - Massas
+Prato Pronto - Soja
+Refeição Pronta
+Prato Pronto - Arroz
+Enlatados
+Sopas e Cremes
+Cremes
+Sopas
+Padaria
+Fabricação Própria Padaria
+Acompanhamentos Padaria
+Bolos e Doces
+Confeitaria Gelada
+Insumos da Padaria
+Pães Fabricação Própria
+Pães Orgânicos
+Lanche
+Biscoitos Doces da Padaria
+Torradas da Padaria
+Biscoitos Salgados da Padaria
+Padaria Industrializada
+Ingredientes Culinários Padaria
+Pães
+Bolos e Doces da Padaria
+Confeitaria Sazonal
+Peixaria
+Peixes Congelados
+Frutos do Mar Congelados
+Pescados Congelados
+Bacalhau Congelado
+Peixes Frescos
+Frutos do Mar
+Insumos da Peixaria
+Pescados
+Pratos Prontos da Peixaria
+Peixes Salgados
+Bacalhau
+Rotisserie
+Entradas e Acompanhamentos
+Acompanhamentos Rotisserie
+Saladas Rotisserie
+Sopas e Cremes Rotisserie
+Tortas e Quiches Rotisserie
+Fabricação Própria
+Prato Principal
+Refeição Completa
+Pratos Semi Prontos
+Doces Rotisserie
+Insumos da Rotisserie
+Serviços Diferenciados
+Central de Produção
+Insumos da Lanchonete
+Lanchonete
+Bebidas Rotisserie
+Combinados Rotisserie
+Salgados da Lanchonete
+Sanduíches da Lanchonete
+Doces da Lanchonete
+Sobremesas da Lanchonete
+Salgadinhos e Aperitivos
+Aperitivos
+Salgadinhos
+Torradas
+Batata Palha
+Pipoca Pronta
+Bebidas
+Bebidas Alcóolicas
+Alcoólicos Congelados
+Caipirinha
+Coquetéis
+Drink Pronto
+Destilados
+Aguardente
+Conhaque
+Gin
+Saquê
+Tequila
+Vodka
+Whisky
+Licores
+Licor Aperitivo
+Cervejas
+Cervejas Escura
+Cerveja Escura Importada
+Cerveja Escura Nacional
+Kit de Cerveja Escura
+Cervejas Pilsen
+Cerveja Pielsen Nacional
+Cerveja Pielsen Importada
+Kit de Cerveja Pielsen
+Cervejas Premium
+Cerveja Premium Importada
+Cerveja Premium Nacional
+Cerveja Premium Orgânica
+Kit de Cerveja Premium
+Cerveja Premium Barril
+Cervejas Saborizadas
+Cerveja Saborizada Nacional
+Cervejas Sem Álcool
+Cerveja Sem Álcool Importada
+Cerveja Sem Álcool Nacional
+Kit Cerveja Sem Álcool
+Cervejas Especiais e Artesanais
+Cerveja Especial e Artesanal Nacional
+Cerveja Especial e Artesanal Importada
+Kit de Cerveja Especial e Artesanal
+Não Alcoólicas
+Chá Pronto
+Chá Pronto Para Beber
+Chás Refrigerados
+Kombuchas
+Coquetéis Não Alcoólicos
+Drink Pronto Não Alcóolico
+Energético
+Energético Importado
+Energético Nacional
+Hidratação
+Água Saborizada
+Água com Gás
+Água sem Gás
+Água de Coco
+Isotônico
+Água Especial
+Não Alcoólicos Congelados
+Sucos, Frutas e Polpas Congelados
+Gelo
+Refresco
+Refresco em Pó
+Refrigerantes
+Cola
+Demais Refrigerantes
+Guaraná
+Tônica
+Sucos
+Bebida Mista
+Bebidas Vegetais
+Suco Concentrado
+Suco Integral
+Suco Natural
+Suco Pronto
+Suco Refrigerado Pronto
+Vinhos
+Brancos
+Vinho Branco Argentino
+Vinho Branco Chileno
+Vinho Branco Francês
+Vinho Branco Italiano
+Vinho Branco Nacional
+Outros Paises - Vinhos Brancos
+Vinho Branco Português
+Vinho Branco Espanhol
+Vinho Branco Meia Garrafa
+Espumante
+Espumante Importado
+Espumante Nacional
+Sidra
+Sidra - Sem Álcool
+Tintos
+Vinho Tinto Argentino
+Vinho Tinto Chileno
+Vinho Tinto Francês
+Vinho Tinto Italiano
+Vinho Tinto Nacional
+Outros Paises - Vinhos Tintos
+Vinho Tinto Português
+Vinho Tinto Meia Garrafa
+Vinho Tinto Espanhol
+Rosés
+Vinho Rosé Argentino
+Vinho Rosé Chileno
+Vinho Rosé Francês
+Vinho Rosé Italiano
+Vinho Rosé Nacional
+Outros Paises - Vinhos Rosé
+Vinho Rosé Português
+Vinho Rosé Espanhol
+Vinho Rosé Meia Garrafa
+Limpeza
+Acessórios de Limpeza
+Bacia
+Balde
+Desentupidores
+Escova
+Feirinha
+Lã de Aço e Esponja
+Lixeira
+Luva
+Odorizador
+Pá para Lixo
+Pano e Flanela
+Rodo
+Vassoura
+Desodorizador
+Outros Acessórios de Limpeza
+Cuidados com a Roupa
+Alvejante
+Amaciante
+Lava Roupas em Pó
+Lava Roupas Liquido
+Facilitadores - Passa Roupas
+Tira Manchas
+Limpeza da Cozinha
+Detergente
+Desengordurante
+Limpa Alumínio
+Limpa Forno
+Limpeza de Banheiro
+Desinfetante
+Limpador Sanitário
+Limpeza Geral
+Água Sanitária
+Álcool
+Limpa Vidro
+Limpadores
+Sabão
+Limpa Carpete
+Proteção para Casa
+Inseticidas
+Descartáveis
+Artigos para Festa
+Acessório para Festa
+Vela de Aniversário
+Casa e Cozinha
+Coador de Papel
+Copo Descartável
+Cozinhar e Armazenar
+Fósforo
+Guardanapo
+Palito
+Papel Toalha
+Prato Descartável
+Protetor de Alumínio para Fogão
+Rolo de Alumínio
+Sacos para Lixo
+Talher Descartável
+Vela Comum
+Descartáveis Higiênicos
+Absorvente
+Fralda Adulto
+Lenço de Papel
+Lenço Umedecido
+Papel Higiênico
+Bebê e Criança
+Cuidados Pessoais Infantil
+Creme Dental Infantil
+Cuidados com Cabelo Infantil
+Cuidados com Corpo Infantil
+Escova Dental Infantil
+Fralda Infantil
+Higiene Bucal Infantil
+Nutrição Infantil
+Cereais Infantil
+Complemento Nutrição Infantil
+Leites e Fórmulas
+Papinhas
+Perfumaria
+Cuidados com Cabelo
+Acessórios para o Cabelo
+Coloração do Cabelo
+Condicionador
+Fixadores
+Hidratação e Tratamento do Cabelo
+Shampoo
+Cuidados com Corpo
+Acessórios Descartáveis
+Acessórios para Banho
+Álcool em Gel
+Desodorante
+Hidratação e Tratamento do Corpo
+Perfume
+Preservativos
+Proteção Labial
+Repelentes
+Sabonete
+Hidratação Labial
+Cuidados com Rosto
+Proteção Solar
+Hidratação e Tratamento do Rosto
+Maquiagem
+Pós Barba
+Depilação
+Cutelaria
+Acessórios de Cutelaria
+Kit de Cutelaria
+Pinça
+Unhas
+Higiene Bucal
+Creme Dental
+Enxaguante Bucal
+Escova Dental
+Fio Dental
+Limpador de Língua
+Acessórios Perfumaria
+Necessaire
+PetShop
+Brinquedos e Utilidades
+Brinquedos e Utilidades - Cães
+Brinquedos e Utilidades - Gatos
+Brinquedos e Utilidades - Outros Pets
+Brinquedos e Utilidades - Aves
+Brinquedos e Utilidades - Peixes
+Cuidado e Higiene
+Higiene - Cães
+Higiene - Gatos
+Ração
+Ração - Aves
+Ração - Cães
+Ração - Gatos
+Ração - Peixes
+Ração - Outros Pets
+Snack e Biscoito
+Snack - Cães
+Snack - Gatos
+Bazar
+Automotivos
+Limpeza e Manutenção Automotiva
+Casa
+Arrumação e Organização
+Faça Você Mesmo
+Decoração Sazonal
+Móveis e Colchões
+Cozinha
+Decoração da Casa
+Jardinagem
+Acessórios e Ferramentas
+Flores e Plantas
+Lazer
+Bicicletas
+Brinquedos
+Camping
+Churrasco
+Esporte
+Praia e Piscina
+Viagem
+Papelaria e Livraria
+Desenho e Escrita
+Livros e Revistas
+Livros
+Álbuns
+Têxtil
+Moda
+Calçados
+Caras do Brasil
+Produtos Especiais
+Organização e Decoração
+Opções Alimentares
+Eletro
+Eletroportáteis
+Eletroportáteis - Casa
