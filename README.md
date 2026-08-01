@@ -76,3 +76,24 @@ Controle_de_estoque/
 ## Dados iniciais
 
 Na primeira execução, a aplicação apresenta Aveia, Cebola e Sabão em pó como exemplo. Os dados passam a ser persistidos após a primeira operação de salvamento.
+
+## Release e executável
+
+Um arquivo ZIP de release também é gerado pelo processo de build: Controle_de_estoque_windows.zip — ele contém o executável (dist\Controle_de_estoque.exe) e os arquivos de dados opcionais (estoque.db, estoque.json, categorias.txt). Para usar o executável:
+
+- Extraia o ZIP em uma pasta;
+- Opcionalmente copie um arquivo `estoque.db` já existente para a mesma pasta do .exe para preservar dados;
+- Execute `Controle_de_estoque.exe`.
+
+## Tutorial e documentação
+
+Há um manual detalhado em TUTORIAL.txt neste repositório que explica passo a passo todas as funcionalidades, telas e procedimentos de backup, empacotamento e solução de problemas. Consulte TUTORIAL.txt para instruções completas.
+
+## Créditos
+
+Desenvolvido por Augusto da Costa Pires. Versão: 1.2.0
+
+## Observações finais
+
+- Teste o executável em um ambiente controlado antes de distribuir em produção.
+- Para gerar novos builds, siga as instruções de empacotamento do TUTORIAL.

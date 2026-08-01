@@ -1,0 +1,112 @@
+TUTORIAL - Controle de Estoque (Detalhado)
+
+Sumário
+1. Visão geral
+2. Requisitos
+3. Executando a aplicação
+  3.1 Via Python (desenvolvimento)
+  3.2 Via executável (usuário final)
+4. Interface e funcionalidades (passo a passo)
+  4.1 Tela principal / Cabeçalho
+  4.2 Pesquisa e tabela
+  4.3 Adicionar produto
+  4.4 Editar produto
+  4.5 Excluir produtos
+  4.6 Leitor USB (código de barras)
+  4.7 Venda por peso (KG)
+  4.8 Relatórios
+  4.9 Backup
+  4.10 Sobre / Créditos
+5. Arquivos gerados e onde estão
+6. Boas práticas e recomendações
+7. Problemas comuns e soluções
+8. Como empacotar / gerar o .exe (curto)
+9. Contato e licença
+
+1. Visão geral
+Aplicação desktop para controle de estoque de pequeno comércio. Permite cadastro ERP-like de produtos, controle de entradas/saídas, vendas por peso, relatórios CSV e backup para transferência.
+
+2. Requisitos
+- Windows 10/11 (para o .exe); Python 3.10+ para executar via fonte.
+- Dependências Python (se executar por fonte): customtkinter
+- Para criar o .exe: PyInstaller
+
+3. Executando a aplicação
+3.1 Via Python (desenvolvimento)
+- Crie um ambiente virtual (opcional): python -m venv .venv
+- Ative e instale dependências: python -m pip install -r requirements.txt
+- Rode: python main.py
+
+3.2 Via executável (usuário final)
+- Extraia Controle_de_estoque_windows.zip
+- Copie os arquivos de dados fornecidos (estoque.db, categorias.txt) para a mesma pasta do .exe (se houver)
+- Execute Controle_de_estoque.exe
+
+4. Interface e funcionalidades (passo a passo)
+4.1 Tela principal / Cabeçalho
+- Mostra o título e o dashboard com métricas rápidas (total, valor em estoque, produtos acabando e vencidos).
+
+4.2 Pesquisa e tabela
+- Campo de busca filtra em tempo real produto, categoria, fornecedor e preço.
+- Clique nos cabeçalhos para ordenar (alternância asc/desc).
+- Duplo clique numa linha para editar.
+
+4.3 Adicionar produto
+- Clique em Adicionar.
+- Campos principais: Código (preenchido automaticamente), Código de Barras (opcional), Produto, Categoria, Fornecedor, Unidade (UN/KG), Preço de Compra, Preço de Venda, Quantidade, Estoque Mínimo, Data de Validade (pode ser automática pela categoria).
+- O botão "Salvar produto" fica habilitado apenas quando os campos obrigatórios estiverem válidos; permite salvar com Enter.
+- Valida números (não negativos) e formato de data dd/mm/aaaa.
+
+4.4 Editar produto
+- Selecione uma linha e clique em Editar ou dê duplo clique.
+- Altere os campos e salve. Se a quantidade mudar, a diferença é registrada como Entrada ou Saída nos movimentos.
+
+4.5 Excluir produtos
+- Selecione um ou mais produtos (Ctrl+clique) e clique em Excluir. Confirmação é solicitada.
+
+4.6 Leitor USB (código de barras)
+- Coloque o cursor no campo "Leitor USB", informe Qtd. entrada, e faça a leitura.
+- Se o código for encontrado, a quantidade é incrementada (ou venda por peso se informar Peso).
+- Se não for encontrado, a aplicação oferece cadastro automático com o código preenchido.
+
+4.7 Venda por peso (KG)
+- Cadastre produtos com Unidade = KG e preço por quilo.
+- No painel leitor, informe o Peso (ex.: 0,750) e leia o código. O sistema baixa o estoque conforme o peso e registra uma saída.
+
+4.8 Relatórios
+- Clique em Relatório, marque os tipos desejados e gere CSVs em relatorios_por_categoria.
+- Entradas e saídas são geradas a partir do histórico de movimentos.
+
+4.9 Backup
+- Em Arquivo → Backup é criado um ZIP contendo estoque.db, estoque.json e categorias.txt. Útil para transferência entre máquinas.
+
+4.10 Sobre / Créditos
+- Em Ajuda → Sobre aparecem versão e desenvolvedor. O rodapé mostra "Desenvolvido por Augusto da Costa Pires".
+
+5. Arquivos gerados
+- estoque.db: banco SQLite
+- relatorio_estoque.csv e relatorios_por_categoria/: relatórios CSV
+- Controle_de_estoque.exe (se gerado)
+- backup_estoque_YYYYMMDD_HHMMSS.zip ao criar backup
+
+6. Boas práticas
+- Fazer backup antes de atualizações.
+- Manter categorias.txt sincronizado se editar categorias.
+- Testar alterações em um banco de cópia antes de usar em produção.
+
+7. Problemas comuns
+- Janela não abre no .exe: verificar presença de DLLs do Tcl/Tk; executar novamente em máquina com runtime do Windows atualizado.
+- PyInstaller inclui a runtime do Python; se houver falhas, abrir o log em build/ e warnings.
+
+8. Como empacotar / gerar o .exe (resumo)
+- Instalar PyInstaller: python -m pip install pyinstaller
+- Rodar: python -m PyInstaller --onefile --noconsole --name Controle_de_estoque main.py
+- Distribuir dist\Controle_de_estoque.exe junto com arquivos de dados necessários.
+
+9. Contato e licença
+- Desenvolvedor: Augusto da Costa Pires
+- Projeto: código fonte disponível nesta pasta
+- Licença: use conforme preferir (nenhuma restrição imposta aqui). Para distribuição comercial, considere adicionar licença formal.
+
+---
+Ultima atualização: 2026-07-31
