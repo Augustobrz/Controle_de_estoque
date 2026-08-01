@@ -560,6 +560,11 @@ class ControleEstoque(ctk.CTk):
                 entrada.bind("<KeyRelease>", atualizar_sugestoes)
 
         def confirmar() -> None:
+            # evitar múltiplos cliques
+            try:
+                salvar_btn.configure(state="disabled")
+            except Exception:
+                pass
             try:
                 codigo = campos["codigo"].get().strip()
                 codigo_barras = campos["codigo_barras"].get().strip()
@@ -580,9 +585,17 @@ class ControleEstoque(ctk.CTk):
                     data_validade = ""
                 elif data_validade and not self.parse_data(data_validade):
                     messagebox.showerror("Data inválida", "Informe a validade no formato dd/mm/aaaa.", parent=janela)
+                    try:
+                        salvar_btn.configure(state="normal")
+                    except Exception:
+                        pass
                     return
             except ValueError:
                 messagebox.showerror("Dados inválidos", "Preencha todos os campos. Quantidade e preço devem ser números não negativos.", parent=janela)
+                try:
+                    salvar_btn.configure(state="normal")
+                except Exception:
+                    pass
                 return
             novo_item = {
                 "codigo": codigo, "codigo_barras": codigo_barras, "produto": produto, "categoria": categoria,
@@ -604,7 +617,45 @@ class ControleEstoque(ctk.CTk):
             self.atualizar_tabela()
             janela.destroy()
 
-        ctk.CTkButton(janela, text="Salvar produto", command=confirmar, height=38, fg_color="#0f766e").pack(fill="x", padx=36, pady=(10, 18))
+        # Validação reativa dos campos para tornar o formulário mais responsivo
+        def validar_campos(evento=None) -> None:
+            try:
+                codigo = campos["codigo"].get().strip()
+                produto = campos["produto"].get().strip()
+                categoria = campos["categoria"].get().strip()
+                unidade = campos["unidade"].get().strip().upper()
+                if not codigo or not produto or not categoria or unidade not in {"UN", "KG"}:
+                    salvar_btn.configure(state="disabled")
+                    return
+                # valores numéricos opcionais aceitam vazio como 0
+                quantidade_text = campos["quantidade"].get().strip()
+                estoque_text = campos["estoque_minimo"].get().strip()
+                compra_text = campos["preco_compra"].get().strip()
+                venda_text = campos["preco_venda"].get().strip()
+                quantidade = float(quantidade_text.replace(",", ".")) if quantidade_text else 0
+                estoque_minimo = float(estoque_text.replace(",", ".")) if estoque_text else 0
+                preco_compra = float(compra_text.replace(",", ".")) if compra_text else 0
+                preco_venda = float(venda_text.replace(",", ".")) if venda_text else 0
+                if quantidade < 0 or estoque_minimo < 0 or preco_compra < 0 or preco_venda < 0:
+                    salvar_btn.configure(state="disabled")
+                    return
+            except Exception:
+                salvar_btn.configure(state="disabled")
+                return
+            salvar_btn.configure(state="normal")
+
+        # vincular validação a todos os campos editáveis
+        for entrada in campos.values():
+            try:
+                entrada.bind("<KeyRelease>", validar_campos)
+            except Exception:
+                pass
+        # permitir salvar com Enter e impedir múltiplos cliques
+        janela.bind("<Return>", lambda e: confirmar())
+        salvar_btn = ctk.CTkButton(janela, text="Salvar produto", command=confirmar, height=38, fg_color="#0f766e", state="disabled")
+        salvar_btn.pack(fill="x", padx=36, pady=(10, 18))
+        # validar estado inicial
+        validar_campos()
 
     def excluir_produto(self) -> None:
         selecionados = self.tabela.selection()
