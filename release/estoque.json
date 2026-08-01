@@ -1,0 +1,32 @@
+[
+  {
+    "produto": "Aveia",
+    "quantidade": 10,
+    "categoria": "Alimentos",
+    "preco": 8.5
+  },
+  {
+    "produto": "Cebola",
+    "quantidade": 15,
+    "categoria": "Hortifruti",
+    "preco": 4.2
+  },
+  {
+    "produto": "Sabão em pó",
+    "quantidade": 3,
+    "categoria": "Limpeza",
+    "preco": 22.9
+  },
+  {
+    "produto": "maria sabor do sertao",
+    "quantidade": 5,
+    "categoria": "Cuzcuz",
+    "preco": 20.0
+  },
+  {
+    "produto": "dona benta",
+    "quantidade": 1,
+    "categoria": "Cuzcuz",
+    "preco": 15.0
+  }
+]
