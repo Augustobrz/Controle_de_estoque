@@ -8,6 +8,7 @@ import sqlite3
 from datetime import date, datetime, timedelta
 from pathlib import Path
 from tkinter import messagebox, ttk
+import tkinter as tk
 import customtkinter as ctk
 
 
@@ -24,6 +25,8 @@ VALIDADE_POR_CATEGORIA: dict[str, int] = {
     "Limpeza": 730, "Higiene": 730, "Utilidades Domésticas": 1095,
 }
 VALIDADE_PADRAO_DIAS = 365
+APP_VERSION = "1.2.0"
+DEVELOPER = "Augusto da Costa Pires"
 
 DADOS_INICIAIS = [
     {"codigo": "P0001", "codigo_barras": "", "produto": "Aveia", "categoria": "Alimentos", "fornecedor": "", "unidade": "UN", "preco_compra": 0, "preco_venda": 8.50, "quantidade": 10, "estoque_minimo": 0, "data_cadastro": "", "ultima_alteracao": "", "data_validade": ""},
@@ -44,12 +47,14 @@ class ControleEstoque(ctk.CTk):
         self.coluna_ordenacao = "produto"
         self.ordem_reversa = False
         self.filtro_dashboard: str | None = None
+        self.version = APP_VERSION
 
         self.title("Controle de Estoque | Mercado")
         self.geometry("1000x720")
         self.minsize(850, 520)
         self.configure(fg_color="#f3f6f8")
         self.protocol("WM_DELETE_WINDOW", self.sair)
+        self.criar_menubar()
         self.criar_interface()
         self.atualizar_tabela()
 
@@ -278,6 +283,11 @@ class ControleEstoque(ctk.CTk):
         self.criar_botao(botoes, "Salvar", self.salvar_estoque, "#6b7280").pack(side="left", padx=4)
         self.criar_botao(botoes, "Relatório", self.gerar_relatorio, "#7c3aed").pack(side="left", padx=4)
         self.criar_botao(botoes, "Sair", self.sair, "#374151").pack(side="left", padx=4)
+
+        # Rodapé com crédito e versão — estilo comercial
+        footer = ctk.CTkFrame(self, fg_color="transparent")
+        footer.pack(fill="x", side="bottom", padx=8, pady=(6, 8))
+        ctk.CTkLabel(footer, text=f"Desenvolvido por {DEVELOPER} • Versão {self.version}", font=("Segoe UI", 9), text_color="#6b7280").pack(side="right", padx=12)
 
     def criar_dashboard(self, pai) -> None:
         """Faixa de indicadores rápidos do estoque."""
@@ -755,6 +765,47 @@ class ControleEstoque(ctk.CTk):
         compra = float(item["preco_compra"])
         venda = float(item["preco_venda"])
         return [item["codigo"], item["produto"], item["categoria"], item["fornecedor"], item["unidade"], compra, venda, quantidade, item["estoque_minimo"], quantidade * compra, quantidade * venda, quantidade * (venda - compra)]
+
+    def criar_menubar(self) -> None:
+        """Cria a barra de menus com opções úteis (Arquivo, Ajuda)."""
+        try:
+            menubar = tk.Menu(self)
+            arquivo = tk.Menu(menubar, tearoff=0)
+            arquivo.add_command(label="Backup", command=self.exportar_backup)
+            arquivo.add_separator()
+            arquivo.add_command(label="Sair", command=self.sair)
+            menubar.add_cascade(label="Arquivo", menu=arquivo)
+            ajuda = tk.Menu(menubar, tearoff=0)
+            ajuda.add_command(label="Sobre", command=self.abrir_sobre)
+            menubar.add_cascade(label="Ajuda", menu=ajuda)
+            self.config(menu=menubar)
+        except Exception:
+            # fallback silencioso em ambientes onde tkinter.Menu não esteja disponível
+            pass
+
+    def abrir_sobre(self) -> None:
+        """Exibe caixa Sobre com créditos e informações da aplicação."""
+        texto = (
+            f"Controle de Estoque\nVersão {self.version}\n\nDesenvolvido por {DEVELOPER}\n\n"
+            "Aplicação para gestão comercial de estoque."
+        )
+        messagebox.showinfo("Sobre", texto)
+
+    def exportar_backup(self) -> None:
+        """Cria um arquivo ZIP com banco e arquivos de configuração para backup/transferência."""
+        try:
+            backup_path = Path.cwd() / f"backup_estoque_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+            import zipfile
+            with zipfile.ZipFile(backup_path, "w") as zf:
+                if BANCO_DADOS.exists():
+                    zf.write(BANCO_DADOS, BANCO_DADOS.name)
+                if ARQUIVO_ESTOQUE.exists():
+                    zf.write(ARQUIVO_ESTOQUE, ARQUIVO_ESTOQUE.name)
+                if ARQUIVO_CATEGORIAS.exists():
+                    zf.write(ARQUIVO_CATEGORIAS, ARQUIVO_CATEGORIAS.name)
+            messagebox.showinfo("Backup criado", f"Backup salvo em:\n{backup_path}")
+        except Exception as erro:
+            messagebox.showerror("Erro no backup", str(erro))
 
     def sair(self) -> None:
         self.salvar_estoque(exibir_mensagem=False)
